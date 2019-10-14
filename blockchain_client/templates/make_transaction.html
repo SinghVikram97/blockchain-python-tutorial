@@ -64,9 +64,7 @@
 
     <div class="container alert alert-secondary">
       <form
-      action="/generate/transaction"
-      method="POST"
-      enctype="multipart/form-data"
+      id="transaction_form"
     >
 
         <div class="row">
@@ -110,7 +108,7 @@
           <div class="input-group mb-3">
             <label class="col-sm-2">Video:</label>
             <div class="col-sm-10 custom-file">
-              <input name="video-file" type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+              <input name="video-file" type="file" class="custom-file-input" id="video_file" aria-describedby="inputGroupFileAddon01">
               <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
             </div>
           </div>
@@ -231,32 +229,51 @@
 
 
     <script>
+      // action="/generate/transaction"
+      // method="POST"
+      // enctype="multipart/form-data"
 
-      // $(function () {
-      //     $("#generate_transaction").click(function () {
+      $(function () {
+          $("#generate_transaction").click(function () {
 
-      //       $.ajax({
-      //         url: "/generate/transaction",
-      //         type: "POST",
-      //         dataType : 'json',
-      //         data: $('#transaction_form').serialize(),
-      //         success: function(response){
+            event.preventDefault();
+            let params=$('#transaction_form').serializeArray()
+            let files = $("#video_file")[0].files;
+            let formData = new FormData();
 
-      //           document.getElementById("confirmation_sender_address").value = response["transaction"]["sender_address"];
-      //           document.getElementById("confirmation_recipient_address").value = response["transaction"]["recipient_address"];
-      //           document.getElementById("confirmation_amount").value = response["transaction"]["value"];
-      //           document.getElementById("transaction_signature").value = response["signature"];
+            for (let i = 0; i < files.length; i++) {
+                formData.append(files[i].name, files[i]);
+            }
 
-      //           $("#basicModal").modal('show');
+            $(params).each(function (index, element) {
+                formData.append(element.name, element.value);
+            });
+
+            $.ajax({
+              url: "/generate/transaction",
+              method: "post",
+              data: formData,
+              dataType : 'json',
+              contentType: false,
+              processData: false,
+              enctype: 'multipart/form-data',
+              success: function(response){
+
+                document.getElementById("confirmation_sender_address").value = response["transaction"]["sender_address"];
+                document.getElementById("confirmation_recipient_address").value = response["transaction"]["recipient_address"];
+                document.getElementById("confirmation_amount").value = response["transaction"]["value"];
+                document.getElementById("transaction_signature").value = response["signature"];
+
+                $("#basicModal").modal('show');
                 
-      //         },
-      //         error: function(error){
-      //           console.log(error);
-      //         }
-      //       });
+              },
+              error: function(error){
+                console.log(error);
+              }
+            });
 
-      //     });
-      // });
+          });
+      });
 
 
       $(function () {
