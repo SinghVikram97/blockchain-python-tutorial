@@ -4,6 +4,8 @@
   <head>
 
     <meta charset="utf-8">
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -61,7 +63,11 @@
 
 
     <div class="container alert alert-secondary">
-    <form id="transaction_form">
+      <form
+      action="/generate/transaction"
+      method="POST"
+      enctype="multipart/form-data"
+    >
 
         <div class="row">
           <label class="col-sm-2">Sender Address:</label>
@@ -99,10 +105,24 @@
         </div>
 
         <br>
+
+        <div class="row">
+          <div class="input-group mb-3">
+            <label class="col-sm-2">Video:</label>
+            <div class="col-sm-10 custom-file">
+              <input name="video-file" type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+              <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+            </div>
+          </div>
+        </div>
+
+        
+
+        <br>
         
         <div class="row">
           <div class="col-lg-12 text-center">
-            <input type="button" id="generate_transaction" class="btn btn-primary btn-lg" value="Generate Transaction">
+            <input type="submit" id="generate_transaction" class="btn btn-primary btn-lg" value="Generate Transaction">
           </div>
         </div>
 
@@ -212,31 +232,31 @@
 
     <script>
 
-      $(function () {
-          $("#generate_transaction").click(function () {
+      // $(function () {
+      //     $("#generate_transaction").click(function () {
 
-            $.ajax({
-              url: "/generate/transaction",
-              type: "POST",
-              dataType : 'json',
-              data: $('#transaction_form').serialize(),
-              success: function(response){
+      //       $.ajax({
+      //         url: "/generate/transaction",
+      //         type: "POST",
+      //         dataType : 'json',
+      //         data: $('#transaction_form').serialize(),
+      //         success: function(response){
 
-                document.getElementById("confirmation_sender_address").value = response["transaction"]["sender_address"];
-                document.getElementById("confirmation_recipient_address").value = response["transaction"]["recipient_address"];
-                document.getElementById("confirmation_amount").value = response["transaction"]["value"];
-                document.getElementById("transaction_signature").value = response["signature"];
+      //           document.getElementById("confirmation_sender_address").value = response["transaction"]["sender_address"];
+      //           document.getElementById("confirmation_recipient_address").value = response["transaction"]["recipient_address"];
+      //           document.getElementById("confirmation_amount").value = response["transaction"]["value"];
+      //           document.getElementById("transaction_signature").value = response["signature"];
 
-                $("#basicModal").modal('show');
+      //           $("#basicModal").modal('show');
                 
-              },
-              error: function(error){
-                console.log(error);
-              }
-            });
+      //         },
+      //         error: function(error){
+      //           console.log(error);
+      //         }
+      //       });
 
-          });
-      });
+      //     });
+      // });
 
 
       $(function () {
